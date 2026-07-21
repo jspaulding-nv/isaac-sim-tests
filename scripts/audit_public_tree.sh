@@ -19,7 +19,7 @@ scan_tree() {
             --glob '!scripts/audit_public_tree.sh' \
             "$search_pattern" .
     else
-        grep -R -n -i -E \
+        grep -R -I -n -i -E \
             --exclude-dir=.git \
             --exclude-dir=output \
             --exclude=audit_public_tree.sh \
