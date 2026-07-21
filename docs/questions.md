@@ -5,19 +5,26 @@ encountered in a future robotics and digital-twin implementation. There was no
 hardware reproduction, customer scene, observed failure, or measured failure
 window. The questions are retained here without project or personal names.
 
-## Questions This VM Can Address
+## Source Inquiry and Current Coverage
 
-| Priority | Question | What one VM can establish |
+The source inquiry is reproduced in recognizable, lightly edited form in the
+root [question-coverage matrix](../README.md#questions-covered). The current
+scope is summarized here.
+
+| # | Source topic | What the current package can establish |
 |---|---|---|
-| 1 | Replicator tiled-camera hang | Whether minimal normal and tiled-camera workloads launch, deliver frames, and scale without hanging on the tested stack. |
-| 2 | CosmosWriter on Blackwell | Whether video creation and required RGB, depth, segmentation, and edge outputs are complete and internally consistent. |
-| 3 | GPU PhysX CUDA error 719 | Whether repeated fixed workloads keep GPU PhysX active without error 719, another targeted CUDA signature, or observed CPU fallback. |
-| 4 | Current software stack | A precise tested configuration covering the GPU, VM mode, OS, driver, containers, Isaac Sim, Isaac Lab, PhysX, Torch, Warp, Replicator, and CosmosWriter. |
-| 5 | Isaac Sim 6.0 and Newton | A same-task comparison of the shipped PhysX and Newton MJWarp presets, including launch, stability, throughput, startup, memory, and visual replay. |
+| 1 | GPU-PhysX error 719 on Blackwell | **Partial:** repeated fixed workloads can show whether GPU PhysX remains active without error 719, another targeted CUDA signature, or an observed CPU fallback on the documented RTX PRO 6000 stack. |
+| 2 | Isaac Sim 6.0 + Newton | **Partial:** the shipped PhysX and Newton MJWarp presets can be compared on one frozen task for launch, stability, throughput, startup, memory, and visual replay. This is not a feature-parity or production-readiness determination. |
+| 3 | Replicator tiled-camera hang on `sm_120` | **Partial:** minimal normal and tiled-camera workloads can be checked for frame delivery, freshness, scaling, and hangs on the tested Full Streaming and standalone surfaces. |
+| 4 | CosmosWriter SDG on Blackwell | **Partial:** RGB, colorized depth, segmentation, edge, and video outputs can be checked for completeness and internal consistency on the tested scene. |
+| 5 | PRO 5000 specifically | **Open:** no PRO 5000 was available. Clean launch on the RTX PRO 6000 is a control, not card-specific evidence. |
+| 6 | Current validated stack for PRO 5000 | **Partial:** the repository records the exact RTX PRO 6000 configuration, but cannot convert it into a PRO 5000 or official supported-stack result. |
+| 7 | PRO 5000 Blackwell versus RTX 6000 Ada | **Open:** neither a PRO 5000 nor an RTX 6000 Ada was tested. The same suite must be run on both cards for a defensible comparison. |
 
 ## Questions One VM Cannot Answer
 
 - It cannot validate a different GPU model.
+- It cannot recommend between two GPU models without matched runs on both.
 - It cannot establish an official supported or certified stack.
 - It cannot identify the root cause of a third-party failure without that
   reproduction, scene, configuration, and logs.
