@@ -13,11 +13,13 @@ documented VM, not product certification or proof that a failure cannot occur.
 The measured tests run headlessly. Separate WebRTC replays make selected
 workloads visible in a browser for recording and human observation.
 
-<!-- Suggested embeds after adding the files:
-     GPU PhysX replay: media/t2-gpu-physx.gif
-     Tiled-camera replay: media/t4-tiled-cameras.gif
-     Newton Ant replay: media/t6-newton-ant.gif
--->
+### T2: GPU PhysX Replay
+
+![T2 GPU PhysX replay showing 1,024 falling rigid bodies](media/t2-gpu-physx.gif)
+
+### T4: Tiled-Camera Replay
+
+![T4 tiled-camera replay showing 16 advancing camera views](media/t4-tiled-cameras.gif)
 
 ### CosmosWriter Modalities
 
@@ -26,7 +28,11 @@ workloads visible in a browser for recording and human observation.
 The panels show the same validated frame. Depth is colorized for visualization
 and is not raw metric depth.
 
-See [media/README.md](media/README.md) for suggested filenames and captions.
+### T6: Newton Ant Replay
+
+![T6 Newton Ant policy replay](media/t6-newton-ant.gif)
+
+See [media/README.md](media/README.md) for provenance and sanitization guidance.
 
 ## Questions Covered
 

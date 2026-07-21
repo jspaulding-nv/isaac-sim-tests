@@ -1,6 +1,6 @@
 # Visual Replay Media
 
-Add browser-captured screenshots and GIFs here. Suggested filenames:
+Published browser captures and generated evidence visuals:
 
 - `t2-gpu-physx.gif`: repeating 1,024-body GPU PhysX replay.
 - `t4-tiled-cameras.gif`: 16-view tiled-camera replay and PASS overlay.
@@ -13,7 +13,21 @@ Add browser-captured screenshots and GIFs here. Suggested filenames:
   ```
 - `t6-newton-ant.gif`: 16-environment Newton Ant policy replay.
 
-Then uncomment or update the corresponding Markdown in the root `README.md`.
+The replay GIFs were cropped to remove browser chrome and unrelated UI. The
+crop is deterministic and preserves frame timing:
+
+```bash
+python3 scripts/sanitize_replay_gif.py input.gif output.gif \
+  --crop LEFT,TOP,RIGHT,BOTTOM [--start-frame N]
+```
+
+Parameters used for the published files:
+
+| Output | Crop | Opening trim |
+|---|---|---|
+| `t2-gpu-physx.gif` | `31,83,671,443` | None |
+| `t4-tiled-cameras.gif` | `79,94,641,505` | None |
+| `t6-newton-ant.gif` | `31,83,671,443` | 4 frames |
 
 Before committing media, inspect the complete browser frame for private IP
 addresses, bookmarks, account avatars, hostnames, notifications, and unrelated

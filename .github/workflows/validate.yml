@@ -31,6 +31,14 @@ jobs:
             jq -e . "$file" >/dev/null
           done
 
+      - name: Validate published media
+        run: |
+          set -euo pipefail
+          file media/t2-gpu-physx.gif | grep -Fq 'GIF image data'
+          file media/t4-tiled-cameras.gif | grep -Fq 'GIF image data'
+          file media/t5-cosmoswriter.png | grep -Fq 'PNG image data'
+          file media/t6-newton-ant.gif | grep -Fq 'GIF image data'
+
       - name: Validate Compose models
         run: |
           set -euo pipefail
