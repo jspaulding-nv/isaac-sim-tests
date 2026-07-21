@@ -1,0 +1,28 @@
+{
+  "test_id": "T4-C-VIS",
+  "status": "PASS_WITH_SCOPE_LIMITATIONS",
+  "execution_surface": "Isaac Sim Full Streaming with WebRTC viewer",
+  "image": "nvcr.io/nvidia/isaac-sim:6.0.1",
+  "sensor": "TiledCameraSensor",
+  "camera_count": 16,
+  "environment_count": 16,
+  "per_camera_resolution": {
+    "width": 320,
+    "height": 240
+  },
+  "tiled_resolution": {
+    "width": 1280,
+    "height": 960
+  },
+  "seed": 20260721,
+  "target_buffers": 600,
+  "delivered_buffers": 600,
+  "first_buffer_latency_seconds": 0.43319303,
+  "observed_run_duration_seconds": 71.79100765,
+  "manual_visual_confirmation": "Browser recording completed; mosaic and 600/600 PASS state observed",
+  "scope_limitations": [
+    "Standalone headless normal-camera control failed and remains a separate finding",
+    "No 64-camera or 640x480-per-camera result",
+    "No representative project scene"
+  ]
+}

@@ -1,0 +1,18 @@
+services:
+  isaac-sim:
+    command: ["--exec", "/workspace/visible_gpu_physx_demo.py"]
+    volumes:
+      - ../tests/visible_gpu_physx_demo.py:/workspace/visible_gpu_physx_demo.py:ro
+    healthcheck:
+      interval: 15s
+      timeout: 10s
+      start_period: 420s
+      retries: 3
+      test:
+        - CMD-SHELL
+        - >-
+          logdir=/isaac-sim/.nvidia-omniverse/logs/Kit;
+          latest=$$(ls -t "$$logdir"/*/*/kit_*.log 2>/dev/null | head -1);
+          [ -n "$$latest" ] &&
+          [ $$(stat -c %Y "$$latest") -ge $$(stat -c %Y /proc/1) ] &&
+          grep -Fq 'VISIBLE_T2_DEMO_READY' "$$latest"

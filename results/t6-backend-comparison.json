@@ -1,0 +1,47 @@
+{
+  "test_id": "T6",
+  "status": "PASS",
+  "image": "nvcr.io/nvidia/isaac-lab:3.0.0-beta2-post1",
+  "task": "Isaac-Ant-Direct-v0",
+  "seeds": [20260720, 20260721, 20260722],
+  "expected_runs": 6,
+  "completed_runs": 6,
+  "num_envs": 4096,
+  "max_iterations_per_run": 100,
+  "planned_transitions_per_run": 13107200,
+  "planned_transitions_per_backend": 39321600,
+  "planned_total_transitions": 78643200,
+  "observed_completed_transitions": 78643200,
+  "comparison": {
+    "physx": {
+      "passing_runs": 3,
+      "observed_transitions": 39321600,
+      "total_training_seconds": 622.33,
+      "total_wallclock_seconds": 841,
+      "mean_training_steps_per_second": 63184.48,
+      "mean_simulation_start_seconds": 30.8617,
+      "mean_final_reward": 3000.53,
+      "mean_final_episode_length": 825.28,
+      "peak_gpu_utilization_pct": 17,
+      "peak_memory_used_mib": 6283,
+      "peak_power_w": 99.51
+    },
+    "newton_mjwarp": {
+      "passing_runs": 3,
+      "observed_transitions": 39321600,
+      "total_training_seconds": 237.56,
+      "total_wallclock_seconds": 916,
+      "mean_training_steps_per_second": 165522.82,
+      "mean_simulation_start_seconds": 165.7397,
+      "mean_final_reward": 2580.59,
+      "mean_final_episode_length": 602.75,
+      "peak_gpu_utilization_pct": 20,
+      "peak_memory_used_mib": 3659,
+      "peak_power_w": 112.83
+    },
+    "newton_to_physx_training_throughput_ratio": 2.6197,
+    "newton_to_physx_total_wallclock_ratio": 1.0892,
+    "newton_to_physx_simulation_start_ratio": 5.3704
+  },
+  "interpretation": "Same-task shipped-preset performance and stability evidence, not solver equivalence or production certification"
+}

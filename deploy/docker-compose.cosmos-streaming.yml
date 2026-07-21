@@ -1,0 +1,24 @@
+services:
+  isaac-sim:
+    command: ["--exec", "/workspace/cosmos_writer_streaming.py"]
+    environment:
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - PYTHONUNBUFFERED=1
+      - T5C_OUTPUT_DIR=/results/workdir/_out_cosmos_simple
+      - T5C_BUILTIN_RESULT=/results/builtin_validation.json
+    volumes:
+      - ../tests/cosmos_writer_streaming.py:/workspace/cosmos_writer_streaming.py:ro
+      - ${T5C_RESULT_DIR:?Set T5C_RESULT_DIR to an absolute host path}:/results:rw
+    healthcheck:
+      interval: 15s
+      timeout: 10s
+      start_period: 420s
+      retries: 3
+      test:
+        - CMD-SHELL
+        - >-
+          logdir=/isaac-sim/.nvidia-omniverse/logs/Kit;
+          latest=$$(ls -t "$$logdir"/*/*/kit_*.log 2>/dev/null | head -1);
+          [ -n "$$latest" ] &&
+          [ $$(stat -c %Y "$$latest") -ge $$(stat -c %Y /proc/1) ] &&
+          grep -Fq 'T5C_RUN_STARTED' "$$latest"

@@ -1,0 +1,83 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Launch Isaac Sim (headless streaming) and a WebRTC web-viewer side by side.
+#
+# Usage:
+#   cp .env.example .env
+#   # Edit ISAACSIM_HOST, then run:
+#   ./start.sh
+#
+# Multiple instances (use -p to namespace, override ports and GPU):
+#   GPU_DEVICE=0 ISAACSIM_SIGNAL_PORT=49100 WEB_VIEWER_PORT=8210 docker compose -p isim1 up --build -d
+#   GPU_DEVICE=1 ISAACSIM_SIGNAL_PORT=49200 WEB_VIEWER_PORT=8211 docker compose -p isim2 up --build -d
+#
+# Override any variable below via the shell environment or a .env file next to
+# this compose file. Set ISAAC_SIM_DATA to change the persistent cache,
+# configuration, data, log, and package root. deploy/start.sh creates the
+# default tree and makes it writable by container uid 1234.
+
+services:
+
+  isaac-sim:
+    image: ${ISAAC_SIM_IMAGE:-nvcr.io/nvidia/isaac-sim:6.0.1}
+    network_mode: "host"
+    # The tested host exposes NVIDIA devices through CDI.
+    devices:
+      - "nvidia.com/gpu=${GPU_DEVICE:-all}"
+    user: "1234:1234"
+    healthcheck:
+      interval: 30s
+      timeout: 10s
+      start_period: 420s
+      retries: 3
+      test: ["CMD-SHELL", "logdir=/isaac-sim/.nvidia-omniverse/logs/Kit; [ -d \"$$logdir\" ] && latest=$$(ls -t \"$$logdir\"/*/*/kit_*.log 2>/dev/null | head -1) && [ -n \"$$latest\" ] && [ $$(stat -c %Y \"$$latest\") -ge $$(stat -c %Y /proc/1) ] && grep -Fq 'Isaac Sim Full Streaming App is loaded.' \"$$latest\" && exit 0; exit 1"]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=${GPU_DEVICE:-all}
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - ACCEPT_EULA=Y
+      - ISAACSIM_HOST=${ISAACSIM_HOST:-127.0.0.1}
+      - ISAACSIM_SIGNAL_PORT=${ISAACSIM_SIGNAL_PORT:-49100}
+      - ISAACSIM_STREAM_PORT=${ISAACSIM_STREAM_PORT:-47998}
+    volumes:
+      - ${ISAAC_SIM_DATA:-./runtime/isaac-sim}/cache/main:/isaac-sim/.cache:rw
+      - ${ISAAC_SIM_DATA:-./runtime/isaac-sim}/cache/computecache:/isaac-sim/.nv/ComputeCache:rw
+      - ${ISAAC_SIM_DATA:-./runtime/isaac-sim}/logs:/isaac-sim/.nvidia-omniverse/logs:rw
+      - ${ISAAC_SIM_DATA:-./runtime/isaac-sim}/config:/isaac-sim/.nvidia-omniverse/config:rw
+      - ${ISAAC_SIM_DATA:-./runtime/isaac-sim}/data:/isaac-sim/.local/share/ov/data:rw
+      - ${ISAAC_SIM_DATA:-./runtime/isaac-sim}/pkg:/isaac-sim/.local/share/ov/pkg:rw
+      - ${ISAACSIM_HUB_CACHE_PATH:-./runtime/hub}:/var/cache/hub:rw
+    restart: unless-stopped
+
+  web-viewer:
+    build:
+      context: ./web-viewer
+      network: host
+      args:
+        ISAACSIM_HOST: ${ISAACSIM_HOST:-127.0.0.1}
+        ISAACSIM_SIGNAL_PORT: ${ISAACSIM_SIGNAL_PORT:-49100}
+        ISAACSIM_STREAM_PORT: ${ISAACSIM_STREAM_PORT:-47998}
+    network_mode: "host"
+    command: ["npx", "vite", "preview", "--host", "--port", "${WEB_VIEWER_PORT:-8210}"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${WEB_VIEWER_PORT:-8210}/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    depends_on:
+      isaac-sim:
+        condition: service_healthy
+    restart: unless-stopped

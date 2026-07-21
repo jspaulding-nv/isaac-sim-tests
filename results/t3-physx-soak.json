@@ -1,0 +1,21 @@
+{
+  "test_id": "T3",
+  "status": "PASS",
+  "image": "nvcr.io/nvidia/isaac-lab:3.0.0-beta2-post1",
+  "task": "Isaac-Ant-Direct-v0",
+  "physics_preset": "physx",
+  "seeds": [20260720, 20260721, 20260722],
+  "expected_runs": 3,
+  "completed_runs": 3,
+  "num_envs": 16384,
+  "max_iterations_per_seed": 250,
+  "planned_transitions_per_seed": 131072000,
+  "planned_total_transitions": 393216000,
+  "observed_completed_transitions": 393216000,
+  "total_training_seconds": 2124.9,
+  "peak_gpu_utilization_pct": 60,
+  "peak_memory_used_mib": 10225,
+  "peak_power_w": 141.54,
+  "negative_signature_scan": "NO_MATCHES",
+  "kernel_xid_scan": "NO_MATCHES"
+}

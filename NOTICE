@@ -1,0 +1,9 @@
+This repository contains test orchestration, documentation, and selected
+workloads for NVIDIA Isaac Sim and Isaac Lab.
+
+Files that retain an NVIDIA copyright header were derived from or adapted from
+NVIDIA Isaac Sim examples and remain subject to the license stated in those
+files. Other repository content is provided under the root Apache License 2.0.
+
+No NVIDIA product certification is implied by the test results in this
+repository.

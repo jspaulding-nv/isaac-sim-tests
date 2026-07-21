@@ -1,0 +1,51 @@
+name: Validate public test package
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  static-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate shell syntax
+        run: |
+          set -euo pipefail
+          for file in deploy/*.sh scripts/*.sh; do
+            bash -n "$file"
+          done
+
+      - name: Validate Python syntax
+        run: python3 -m py_compile tests/*.py
+
+      - name: Validate curated JSON
+        run: |
+          set -euo pipefail
+          for file in results/*.json; do
+            jq -e . "$file" >/dev/null
+          done
+
+      - name: Validate Compose models
+        run: |
+          set -euo pipefail
+          docker compose --env-file deploy/.env.example \
+            -p isaacsim-tests -f deploy/docker-compose.yml config --quiet
+          docker compose --env-file deploy/.env.example \
+            -p isaacsim-tests -f deploy/docker-compose.yml \
+            -f deploy/docker-compose.visible-physx.yml config --quiet
+          docker compose --env-file deploy/.env.example \
+            -p isaacsim-tests -f deploy/docker-compose.yml \
+            -f deploy/docker-compose.visible-tiled.yml config --quiet
+          T5C_RESULT_DIR="$PWD/output/T5-C-config-check" \
+            docker compose --env-file deploy/.env.example \
+            -p isaacsim-tests -f deploy/docker-compose.yml \
+            -f deploy/docker-compose.cosmos-streaming.yml config --quiet
+
+      - name: Scan public tree
+        run: ./scripts/audit_public_tree.sh
