@@ -22,7 +22,7 @@ jobs:
           done
 
       - name: Validate Python syntax
-        run: python3 -m py_compile tests/*.py
+        run: python3 -m py_compile scripts/*.py tests/*.py
 
       - name: Validate curated JSON
         run: |

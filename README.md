@@ -19,6 +19,13 @@ workloads visible in a browser for recording and human observation.
      Newton Ant replay: media/t6-newton-ant.gif
 -->
 
+### CosmosWriter Modalities
+
+![T5-C CosmosWriter synchronized RGB, shaded segmentation, semantic segmentation, colorized depth, and edge outputs](media/t5-cosmoswriter.png)
+
+The panels show the same validated frame. Depth is colorized for visualization
+and is not raw metric depth.
+
 See [media/README.md](media/README.md) for suggested filenames and captions.
 
 ## Questions Covered

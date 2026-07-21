@@ -4,7 +4,13 @@ Add browser-captured screenshots and GIFs here. Suggested filenames:
 
 - `t2-gpu-physx.gif`: repeating 1,024-body GPU PhysX replay.
 - `t4-tiled-cameras.gif`: 16-view tiled-camera replay and PASS overlay.
-- `t5-cosmoswriter.png`: representative validated output modalities.
+- `t5-cosmoswriter.png`: synchronized validated output modalities. Rebuild it
+  from retained T5 output with:
+
+  ```bash
+  python3 scripts/build_t5_contact_sheet.py /path/to/clip_0000 \
+    --frame 30 --output media/t5-cosmoswriter.png
+  ```
 - `t6-newton-ant.gif`: 16-environment Newton Ant policy replay.
 
 Then uncomment or update the corresponding Markdown in the root `README.md`.
