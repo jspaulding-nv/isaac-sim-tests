@@ -32,15 +32,25 @@ fi
 scan_tree() {
     local search_pattern="$1"
 
-    if ! command -v rg >/dev/null 2>&1; then
-        printf 'ripgrep (rg) is required for the privacy scan.\n' >&2
-        return 2
+    if command -v rg >/dev/null 2>&1; then
+        rg -n -i --hidden \
+            --glob '!.git/**' \
+            --glob '!scripts/audit_public_tree.sh' \
+            "$search_pattern" .
+        return
     fi
 
-    rg -n -i --hidden \
-        --glob '!.git/**' \
-        --glob '!scripts/audit_public_tree.sh' \
-        "$search_pattern" .
+    local -a public_files=()
+    mapfile -d '' -t public_files < <(
+        git ls-files -z --cached --others --exclude-standard -- \
+            . ':(exclude)scripts/audit_public_tree.sh'
+    )
+
+    if [[ "${#public_files[@]}" -eq 0 ]]; then
+        return 1
+    fi
+
+    grep -n -I -i -E -- "$search_pattern" "${public_files[@]}"
 }
 
 scan_index() {
