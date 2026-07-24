@@ -1,6 +1,6 @@
 {
   "test_id": "T4-C-VIS",
-  "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "gpu": "NVIDIA RTX PRO 5000 Blackwell",
   "status": "PASS_WITH_SCOPE_LIMITATIONS",
   "execution_surface": "Isaac Sim Full Streaming with WebRTC viewer",
   "image": "nvcr.io/nvidia/isaac-sim:6.0.1",
@@ -18,9 +18,9 @@
   "seed": 20260721,
   "target_buffers": 600,
   "delivered_buffers": 600,
-  "first_buffer_latency_seconds": 0.43319303,
-  "observed_run_duration_seconds": 71.79100765,
-  "manual_visual_confirmation": "Browser recording completed; mosaic and 600/600 PASS state observed",
+  "first_buffer_latency_seconds": 0.088859526,
+  "observed_run_duration_seconds": 19.896891078,
+  "manual_visual_confirmation": "Browser replay completed; mosaic and 600/600 PASS state observed",
   "scope_limitations": [
     "Standalone headless normal-camera control failed and remains a separate finding",
     "No 64-camera or 640x480-per-camera result",

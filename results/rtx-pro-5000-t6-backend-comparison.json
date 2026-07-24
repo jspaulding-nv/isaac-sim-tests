@@ -1,0 +1,52 @@
+{
+  "test_id": "T6",
+  "gpu": "NVIDIA RTX PRO 5000 Blackwell",
+  "status": "PASS",
+  "image": "nvcr.io/nvidia/isaac-lab:3.0.0-beta2-post1",
+  "task": "Isaac-Ant-Direct-v0",
+  "seeds": [
+    20260720,
+    20260721,
+    20260722
+  ],
+  "expected_runs": 6,
+  "completed_runs": 6,
+  "num_envs": 4096,
+  "max_iterations_per_run": 100,
+  "planned_transitions_per_run": 13107200,
+  "planned_transitions_per_backend": 39321600,
+  "planned_total_transitions": 78643200,
+  "observed_completed_transitions": 78643200,
+  "comparison": {
+    "physx": {
+      "passing_runs": 3,
+      "observed_transitions": 39321600,
+      "total_training_seconds": 99.11,
+      "total_wallclock_seconds": 198,
+      "mean_training_steps_per_second": 396747.05,
+      "mean_simulation_start_seconds": 9.5447,
+      "mean_final_reward": 2414.69,
+      "mean_final_episode_length": 810.37,
+      "peak_gpu_utilization_pct": 59,
+      "peak_memory_used_mib": 4023,
+      "peak_power_w": 122.03
+    },
+    "newton_mjwarp": {
+      "passing_runs": 3,
+      "observed_transitions": 39321600,
+      "total_training_seconds": 71.38,
+      "total_wallclock_seconds": 348,
+      "mean_training_steps_per_second": 550877.0,
+      "mean_simulation_start_seconds": 61.3452,
+      "mean_final_reward": 3328.92,
+      "mean_final_episode_length": 694.64,
+      "peak_gpu_utilization_pct": 59,
+      "peak_memory_used_mib": 1399,
+      "peak_power_w": 139.13
+    },
+    "newton_to_physx_training_throughput_ratio": 1.3885,
+    "newton_to_physx_total_wallclock_ratio": 1.7576,
+    "newton_to_physx_simulation_start_ratio": 6.4271
+  },
+  "interpretation": "Same-task shipped-preset performance and stability evidence, not solver equivalence or production certification"
+}

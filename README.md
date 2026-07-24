@@ -2,13 +2,14 @@
 
 ## Overview
 
-Reproducible container tests for Isaac Sim 6.0.1 and Isaac Lab on an NVIDIA
-RTX PRO 6000 Blackwell Server Edition GPU.
+Reproducible container tests for Isaac Sim 6.0.1 and Isaac Lab on NVIDIA
+RTX PRO 5000 Blackwell and RTX PRO 6000 Blackwell Server Edition GPUs.
 
 This repository turns a set of researched platform-risk questions into
 measurable tests. No prior hardware failure or customer reproduction was
-available. The results therefore describe proactive qualification on one
-documented VM, not product certification or proof that a failure cannot occur.
+available. The results therefore describe proactive qualification on two
+documented systems, not product certification, a controlled GPU-only
+benchmark, or proof that a failure cannot occur.
 
 ## Questions Covered
 
@@ -16,29 +17,32 @@ This work began with seven open questions about "bugs and unknowns that could
 affect a rollout." The source language is preserved where useful, lightly
 edited to remove recipient-directed requests and to avoid presenting research
 reports as failures reproduced here. `PARTIAL` means the question received
-direct but bounded evidence on this VM; `OPEN` means the required hardware or
-comparison was not tested.
+direct but bounded evidence; `OPEN` means the required hardware or comparison
+was not tested.
 
-| # | Source question, lightly edited | Evidence from this repository | Coverage and remaining investigation |
-|---:|---|---|---|
-| 1 | **GPU-PhysX error 719 on Blackwell.** Reports described an intermittent `PhysX Internal CUDA error, Error code 719` after a nondeterministic number of steps, or a silent CPU fallback. Is there a driver + Isaac Sim + PhysX combination stable on `sm_120`? | [T2](docs/test-plan.md#t2-gpu-physx-smoke) completed 600/600 steps with 1,024 bodies on `cuda:0`, with no targeted CUDA/fallback signature or Xid. [T3](docs/test-plan.md#t3-isaac-lab-gpu-physx-soak) completed three 16,384-environment Ant runs and 393,216,000 transitions with no targeted signature. | **PARTIAL.** This bounds one RTX PRO 6000 stack and workload envelope; it cannot disprove a nondeterministic failure. PRO 5000, longer runs, other robots/contacts, and representative scenes remain untested. |
-| 2 | **Isaac Sim 6.0 + Newton.** Does 6.0 fix GPU PhysX on `sm_120`, or primarily offer Newton as an alternative backend? Is Newton ready for RL, and which features remain PhysX-GPU-only? | [T6](docs/test-plan.md#t6-newton-mjwarp-versus-physx) completed three runs per shipped preset and 78,643,200 transitions. Newton reported 2.62x PhysX training throughput, but mean simulation-start time was 5.37x as long and summed cold wall time was 8.9% longer on this task. | **PARTIAL.** Both presets ran, but this does not establish product intent, production readiness, convergence or numerical parity, or a PhysX-only feature inventory. More tasks, sensors, APIs, and warm-service tests are needed. |
-| 3 | **Replicator tiled-camera hang on `sm_120`.** Reports described tiled rendering hanging before the Warp kernel runs, affecting CosmosWriter SDG output and camera-based sensing. Does this affect the PRO Blackwell line? | [T4](docs/test-plan.md#t4-tiled-camera-progression) produced 600/600 advancing buffers from 16 tiled cameras at 320 x 240 in Full Streaming. The standalone normal-camera control returned no RGB. | **PARTIAL.** No streaming-path hang occurred in the tested envelope, but the standalone discrepancy remains. The planned 64-camera, 640 x 480 case, production scenes, and PRO 5000 remain open. |
-| 4 | **CosmosWriter SDG on Blackwell.** Beyond documented video-skip and DLSS-mode workarounds, do `sm_120` issues affect ground-truth label integrity for depth, segmentation, or edge control signals? | [T5](docs/test-plan.md#t5-cosmoswriter) delivered 60/60 frames for five modalities in Full Streaming: 300 PNGs and five 60-frame H.264 videos. Independent checks covered decoding, freshness, semantic colors, and segmentation/edge alignment. Standalone runs delivered 56/60. | **PARTIAL.** The Full Streaming outputs passed, but the standalone shortfall needs root-cause work. Depth was colorized rather than raw metric depth; representative assets, lighting, occlusion, and longer runs remain open. |
-| 5 | **PRO 5000 specifically.** Public reports centered on the PRO 6000. Does Isaac Sim launch cleanly on the PRO 5000, and is card-specific validation available? | [T1](docs/test-plan.md#t1-isaac-sim-clean-launch-and-webrtc) demonstrated clean launch and WebRTC on an RTX PRO 6000 Blackwell Server Edition only. | **OPEN for PRO 5000.** A card-specific run of T0-T6 is required; RTX PRO 6000 results must not be treated as PRO 5000 certification. |
-| 6 | **Current validated stack.** What driver, Isaac Sim, Isaac Lab, PhysX, and Torch versions are validated for the PRO 5000? | [T0](docs/test-plan.md#t0-environment-inventory), [T1](docs/test-plan.md#t1-isaac-sim-clean-launch-and-webrtc), and the [Tested Stack](#tested-stack) record the exact RTX PRO 6000 VM, driver, containers, Isaac Sim, Isaac Lab, PhysX, Torch, Warp, and RSL-RL versions used here. | **PARTIAL.** This is a reproducible tested configuration for RTX PRO 6000, not a PRO 5000 result or an official supported-stack declaration. |
-| 7 | **PRO 5000 Blackwell vs. RTX 6000 Ada.** Is either GPU preferable for current Isaac or Omniverse workloads when production readiness matters more than architecture generation? | No cross-card hardware benchmark was run. T0-T6 provide a reusable comparison procedure. | **OPEN.** Run the same images, seeds, scenes, sensor loads, power sampling, and acceptance criteria on both cards before making a procurement recommendation. |
+| # | Source question, lightly edited | RTX PRO 5000 Blackwell evidence | RTX PRO 6000 Blackwell reference evidence | Coverage and remaining investigation |
+|---:|---|---|---|---|
+| 1 | **GPU-PhysX error 719 on Blackwell.** Reports described an intermittent `PhysX Internal CUDA error, Error code 719` after a nondeterministic number of steps, or a silent CPU fallback. Is there a driver + Isaac Sim + PhysX combination stable on `sm_120`? | [T2](docs/test-plan.md#t2-gpu-physx-smoke) passed 600/600 steps; [T3](docs/test-plan.md#t3-isaac-lab-gpu-physx-soak) passed 393,216,000/393,216,000 transitions. | The same T2 and T3 envelopes passed. Neither system showed a targeted CUDA/fallback signature or Xid. | **PARTIAL.** This bounds two RTX PRO Blackwell systems and fixed workload envelopes; it cannot disprove an intermittent failure. Longer runs, other robots/contacts, and representative scenes remain open. |
+| 2 | **Isaac Sim 6.0 + Newton.** Does 6.0 fix GPU PhysX on `sm_120`, or primarily offer Newton as an alternative backend? Is Newton ready for RL, and which features remain PhysX-GPU-only? | [T6](docs/test-plan.md#t6-newton-mjwarp-versus-physx) passed 6/6 runs. Newton/PhysX ratios were 1.39x training throughput, 6.43x simulation start, and 1.76x summed cold wall time. | T6 passed 6/6 runs. Newton/PhysX ratios were 2.62x training throughput, 5.37x simulation start, and 1.09x summed cold wall time. | **PARTIAL.** Both shipped presets ran on both systems, but this does not establish production readiness, convergence or numerical parity, or a PhysX-only feature inventory. |
+| 3 | **Replicator tiled-camera hang on `sm_120`.** Reports described tiled rendering hanging before the Warp kernel runs, affecting CosmosWriter SDG output and camera-based sensing. Does this affect the PRO Blackwell line? | [T4](docs/test-plan.md#t4-tiled-camera-progression) produced 600/600 buffers from 16 tiled cameras at 320 x 240 in Full Streaming; standalone returned no RGB. | The matched Full Streaming replay also produced 600/600 buffers; standalone again returned no RGB. | **PARTIAL.** No streaming-path hang occurred in either tested envelope, but the standalone discrepancy, 64-camera case, 640 x 480 case, and production scenes remain open. |
+| 4 | **CosmosWriter SDG on Blackwell.** Beyond documented video-skip and DLSS-mode workarounds, do `sm_120` issues affect ground-truth label integrity for depth, segmentation, or edge control signals? | [T5](docs/test-plan.md#t5-cosmoswriter) delivered and independently validated 60/60 Full Streaming frames for five modalities; standalone delivered 55/60. | Full Streaming also delivered 60/60 frames for all five modalities; standalone delivered 56/60. | **PARTIAL.** Full Streaming passed on both systems, but the standalone shortfall needs root-cause work. Raw metric depth, representative assets, and longer runs remain open. |
+| 5 | **PRO 5000 specifically.** Public reports centered on the PRO 6000. Does Isaac Sim launch cleanly on the PRO 5000, and is card-specific validation available? | The card-specific T0-T6 run completed. Compatibility and warm Full Streaming passed; cold Full Streaming remained in `await_viewport` and failed health readiness. | T1 compatibility, cold/warm Full Streaming, WebRTC, and input passed on the reference system. | **PARTIAL for PRO 5000.** Card-specific evidence now exists, but the cold-launch failure needs root-cause work and one system is not certification. |
+| 6 | **Current validated stack.** What driver, Isaac Sim, Isaac Lab, PhysX, and Torch versions are validated for the PRO 5000? | The [RTX PRO 5000 result](results/rtx-pro-5000-tested-configuration.md) records driver 595.84, pinned containers, and the observed application stack. | The [RTX PRO 6000 reference](results/tested-configuration.md) records its exact hardware and software stack. | **PARTIAL.** These are reproducible tested configurations, not an official supported-stack declaration. |
+| 7 | **PRO 5000 Blackwell vs. RTX 6000 Ada.** Is either GPU preferable for current Isaac or Omniverse workloads when production readiness matters more than architecture generation? | Matched Blackwell-to-Blackwell workloads were run, but the unlike hosts prevent a GPU-only ranking. | The available reference is an RTX PRO 6000 **Blackwell** Server Edition, not an RTX 6000 Ada. | **OPEN.** No RTX 6000 Ada was tested, so this repository cannot answer the requested Ada procurement comparison. |
 
-**Coverage summary:** Questions 1-4 received direct but bounded evidence,
-question 6 received an RTX PRO 6000 tested-stack record rather than the
-requested PRO 5000 result, and questions 5 and 7 remain untested. See [the
-detailed question boundaries](docs/questions.md), the [test
+**Coverage summary:** Questions 1-6 now have direct but bounded evidence on
+both documented RTX PRO Blackwell systems. Question 7 remains open because the
+reference GPU is an RTX PRO 6000 Blackwell Server Edition, not an RTX 6000 Ada.
+See [the detailed question boundaries](docs/questions.md), the [test
 plan](docs/test-plan.md), and the [workload index](tests/README.md).
 
 ## Visual Replays
 
 The measured tests run headlessly. Separate WebRTC replays make selected
-workloads visible in a browser for recording and human observation.
+workloads visible in a browser for recording and human observation. The
+published media below comes from the RTX PRO 6000 reference run. RTX PRO 5000
+visual replays passed manual observation, but no sanitized browser capture was
+retained for publication.
 
 ### T2: GPU PhysX Replay
 
@@ -61,15 +65,21 @@ and is not raw metric depth.
 
 See [media/README.md](media/README.md) for provenance and sanitization guidance.
 
-## Tested Stack
+## Tested Configurations
+
+| Component | RTX PRO 5000 Blackwell | RTX PRO 6000 Blackwell reference |
+|---|---|---|
+| Run | 2026-07-23 through 2026-07-24 UTC | 2026-07-20 through 2026-07-21 UTC |
+| GPU / framebuffer | NVIDIA RTX PRO 5000 Blackwell, 48,935 MiB | NVIDIA RTX PRO 6000 Blackwell Server Edition, 97,887 MiB |
+| Exposure | Full device, MIG disabled, ECC enabled; `systemd-detect-virt` reported `none` | Full PCIe pass-through VM, MIG inactive |
+| System | Ubuntu 22.04.5 LTS, kernel 5.15.0-177-generic; Ryzen 7 7800X3D, 16 logical CPUs, 124 GiB RAM | Ubuntu 22.04.5 LTS, kernel 5.15.0-181-generic; 32 vCPU, 62 GiB RAM |
+| Driver | 595.84 | 595.84 |
+| Docker / NVIDIA Container Toolkit | 29.6.0 / 1.19.1 | 29.6.0 / 1.19.1 |
+
+Common frozen software:
 
 | Component | Tested value |
 |---|---|
-| Reference run | 2026-07-20 through 2026-07-21 UTC |
-| GPU | NVIDIA RTX PRO 6000 Blackwell Server Edition, full PCIe pass-through |
-| Guest | Ubuntu 22.04.5 LTS, kernel 5.15.0-181-generic |
-| Driver | 595.84 |
-| Docker / NVIDIA Container Toolkit | 29.6.0 / 1.19.1 |
 | Isaac Sim container | `nvcr.io/nvidia/isaac-sim:6.0.1` |
 | Isaac Sim digest | `sha256:783444c706538aa76cf5126e911ddc5e618779e6105305ad4af4260362a30aa9` |
 | Isaac Sim / Kit / PhysX / Warp | 6.0.1 / 110.1.2 / 110.1.13 / 1.13.0 |
@@ -80,24 +90,33 @@ See [media/README.md](media/README.md) for provenance and sanitization guidance.
 
 The Isaac Lab image is a beta track selected because this exact image bundled
 the tested Isaac Sim build and shipped both `physx` and `newton_mjwarp`
-presets. All scripts allow the image reference to be overridden.
+presets. All scripts allow the image reference to be overridden. Host
+differences are material confounders for cross-system timing.
+
+The RTX PRO 5000 evidence records repository commit
+`1166bc6d6a5e446d76498b68a8fa59ee069a07ab`. The existing public RTX PRO 6000
+artifacts do not independently identify a commit, so commit equality is not
+claimed.
 
 ## Result Snapshot
 
-| Test | Result on the tested VM |
-|---|---|
-| T0 inventory | GPU, VM, driver, container runtime, rendering, and NVENC were identified |
-| T1 clean launch | Isaac Sim 6.0.1 reached streaming-ready state and accepted a browser WebRTC session |
-| T2 GPU PhysX smoke | 1,024 rigid bodies completed 600 steps on `cuda:0`; lifecycle and driver warnings remain documented |
-| T3 PhysX soak | Three 16,384-environment Ant runs completed 393,216,000 transitions |
-| T4 tiled cameras | Standalone headless control failed to produce RGB; Full Streaming delivered 600/600 buffers from 16 cameras at 320 x 240 |
-| T5 CosmosWriter | Standalone runs delivered 56/60 frames; Full Streaming delivered 60/60 for five modalities and five H.264 videos |
-| T6 Newton comparison | Six A/B runs completed 78,643,200 transitions; Newton training throughput was 2.62x PhysX, with longer cold startup |
-| T6 visual replay | A 16-environment Newton policy replay was visible and moving in the browser |
+| Test | RTX PRO 5000 Blackwell | RTX PRO 6000 Blackwell reference |
+|---|---|---|
+| T0 inventory/CDI | **PASS** | **PASS** |
+| T1 launch/streaming | **SPLIT:** compatibility and warm Full Streaming passed; cold Full Streaming failed in `await_viewport` | **PASS:** compatibility and cold/warm Full Streaming passed |
+| T2 GPU PhysX | **PASS:** 1,024 bodies, 600/600 steps on `cuda:0`; documented process-exit lifecycle limitation | **PASS:** same matched workload; native shutdown limitation |
+| T3 PhysX soak | **PASS:** 3/3 seeds and 393,216,000 transitions | **PASS:** 3/3 seeds and 393,216,000 transitions |
+| T4 tiled cameras | **SPLIT:** standalone no RGB; Full Streaming 600/600 | **SPLIT:** standalone no RGB; Full Streaming 600/600 |
+| T5 CosmosWriter | **SPLIT:** standalone 55/60; Full Streaming 60/60 for five modalities | **SPLIT:** standalone 56/60; Full Streaming 60/60 for five modalities |
+| T6 PhysX/Newton | **PASS:** 6/6 runs; Newton reported 1.39x PhysX training throughput | **PASS:** 6/6 runs; Newton reported 2.62x PhysX training throughput |
+| T6 visual replay | **PASS:** 16 Newton Ant agents visibly moving | **PASS:** 16-environment Newton replay visibly moving |
 
 These split results matter. A pass in Full Streaming does not erase the
-standalone T4/T5 failures. See [results/tested-configuration.md](results/tested-configuration.md)
-for measurements, warnings, and limitations.
+standalone T4/T5 failures. Performance values are end-to-end observations from
+unlike hosts, not isolated GPU rankings. See the
+[RTX PRO 5000 result](results/rtx-pro-5000-tested-configuration.md) and
+[RTX PRO 6000 reference](results/tested-configuration.md) for measurements,
+warnings, and limitations.
 
 ## Quick Start
 
@@ -116,6 +135,10 @@ cp deploy/.env.example deploy/.env
 ${EDITOR:-vi} deploy/.env
 ./deploy/start.sh
 ```
+
+`deploy/start.sh` expects its runtime cache tree to remain writable by the
+launching user. If an earlier container leaves root-owned cache entries, repair
+the local cache ownership or select fresh runtime directories before relaunch.
 
 Open `http://<ISAACSIM_HOST>:<WEB_VIEWER_PORT>` from a machine that can reach
 the host. The viewer has no built-in authentication or TLS termination. Do not
@@ -145,7 +168,7 @@ increase scale only after they pass.
 deploy/     Headless Isaac Sim and WebRTC viewer deployment
 docs/       Questions, test plan, reproduction, and privacy guidance
 media/      Sanitized browser replays and generated evidence visuals
-results/    Curated, sanitized results from the reference run
+results/    Curated, sanitized results from the documented runs
 scripts/    Host-side test orchestration and evidence collection
 tests/      Workload index, Isaac Sim Python tests, and output validator
 ```
@@ -162,7 +185,9 @@ Generated output goes under `output/` and is ignored by Git. Review
   comparisons are not numerical-equivalence claims.
 - WebRTC rendering and NVENC add load and are kept outside measured headless
   comparisons.
-- RTX PRO 6000 results do not certify another GPU model.
+- Results apply only to each documented system. Cross-system timing cannot
+  isolate GPU performance because host CPU, RAM, virtualization, kernel,
+  storage, and cache conditions differed.
 
 ## Upstream Documentation
 

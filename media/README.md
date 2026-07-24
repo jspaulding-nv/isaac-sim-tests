@@ -1,6 +1,7 @@
 # Visual Replay Media
 
-Published browser captures and generated evidence visuals:
+Published browser captures and generated evidence visuals from the RTX PRO
+6000 Blackwell reference run:
 
 - `t2-gpu-physx.gif`: repeating 1,024-body GPU PhysX replay.
 - `t4-tiled-cameras.gif`: 16-view tiled-camera replay and PASS overlay.
@@ -12,6 +13,10 @@ Published browser captures and generated evidence visuals:
     --frame 30 --output media/t5-cosmoswriter.png
   ```
 - `t6-newton-ant.gif`: 16-environment Newton Ant policy replay.
+
+The RTX PRO 5000 visual replays passed manual observation, but no sanitized
+browser image or recording was retained for publication. Do not interpret
+these reference captures as RTX PRO 5000 media.
 
 The replay GIFs were cropped to remove browser chrome and unrelated UI. The
 crop is deterministic and preserves frame timing:

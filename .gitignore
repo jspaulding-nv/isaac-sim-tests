@@ -1,8 +1,12 @@
 .env
+.codex/
 deploy/.env
 deploy/runtime/
 output/
 results-private/
+*-codex-handoff.md
+*-private*
+evidence-manifest*.sha256
 *.log
 *.pt
 *.tar

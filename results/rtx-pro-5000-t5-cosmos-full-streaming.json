@@ -1,6 +1,6 @@
 {
   "test_id": "T5-C",
-  "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "gpu": "NVIDIA RTX PRO 5000 Blackwell",
   "status": "PASS",
   "execution_surface": "Isaac Sim Full Streaming App",
   "workload_marker": "PASS",
@@ -15,10 +15,16 @@
     "mp4_files": 5,
     "width": 1280,
     "height": 720,
-    "modalities": ["rgb", "shaded_seg", "segmentation", "depth", "edges"]
+    "modalities": [
+      "rgb",
+      "shaded_seg",
+      "segmentation",
+      "depth",
+      "edges"
+    ]
   },
   "scope_limitations": [
-    "Standalone runs delivered 56 of 60 frames and remain a separate finding",
+    "Standalone runs delivered 55 of 60 frames and remain a separate finding",
     "Depth output is colorized and is not raw metric depth"
   ]
 }
