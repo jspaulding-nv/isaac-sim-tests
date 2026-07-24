@@ -4,7 +4,7 @@
 
 Produce a reproducible record for Isaac Sim clean launch, GPU PhysX stability,
 tiled cameras, CosmosWriter output, and a same-task PhysX/Newton comparison on
-one fully documented GPU VM.
+each fully documented GPU system.
 
 This is proactive platform qualification. It is not incident reproduction,
 official certification, or validation of an unstated project workload.
@@ -41,7 +41,7 @@ NVRM: Xid
 
 **Goal:** Establish exactly what is being tested.
 
-Capture the GPU model, virtualization mode, framebuffer, MIG state, guest OS,
+Capture the GPU model, virtualization mode, framebuffer, MIG state, operating system,
 kernel, CPU/RAM, driver, Docker, NVIDIA Container Toolkit, image references,
 application versions, and available disk.
 

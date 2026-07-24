@@ -1,5 +1,8 @@
 # Reference Results: RTX PRO 6000 Blackwell
 
+See the matched [RTX PRO 5000 Blackwell result](rtx-pro-5000-tested-configuration.md)
+for the second documented system.
+
 ## Scope
 
 These results were collected on one VM on 2026-07-20 and 2026-07-21. The
@@ -80,3 +83,10 @@ iterations do not establish convergence, policy parity, or solver equivalence.
   shipped Newton backends where required.
 - Replace synthetic tasks with representative robots, contacts, sensors, and
   scene content before making deployment decisions.
+
+## Curated JSON
+
+- [T3 PhysX soak](t3-physx-soak.json)
+- [T4 tiled-camera replay](t4-tiled-camera-replay.json)
+- [T5 CosmosWriter Full Streaming](t5-cosmos-full-streaming.json)
+- [T6 backend comparison](t6-backend-comparison.json)

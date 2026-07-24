@@ -1,5 +1,6 @@
 {
   "test_id": "T6",
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
   "status": "PASS",
   "image": "nvcr.io/nvidia/isaac-lab:3.0.0-beta2-post1",
   "task": "Isaac-Ant-Direct-v0",
